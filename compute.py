@@ -38,7 +38,6 @@ def getPostfixExp(inExp):
             temp.clear()
         if c.isdigit():
             temp.append(c)
-            continue
         elif c in priority.keys() and c!='(' and c!=')':
             if not stack:
                 stack.append(c)
