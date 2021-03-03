@@ -23,32 +23,42 @@ def myLog(n):
 
 
 # 数学表达式运算函数 
-# 数字越小优先级越高
-priority = {'(':1,'*':2,'/':2,'+':3,'-':3}
+# 数字越大优先级越高
+priority = {'*':2,'/':2,'+':1,'-':1,'(':0}
 
 def getPostfixExp(inExp):
     stack = []
     res = []
     temp = []
-    for c in inExp:
+    for c in inExp+' ': #不加空格有可能访问不了最后的字符
+        print('s'+str(stack))
+        print('res:'+str(res))
+        if temp: #处理连续的数字
+            res.append(''.join(temp))
+            temp.clear()
         if c.isdigit():
             temp.append(c)
             continue
-        if temp:
-            res.append(''.join(temp))
-            temp.clear()
-        if c in priority.keys():
-            if not stack or priority[stack[-1]] < priority[c]:
+        elif c in priority.keys() and c!='(' and c!=')':
+            if not stack:
                 stack.append(c)
-                continue
             else:
-                res.append(stack.pop())
-        if c=='(':
+                while stack:
+                    if priority[stack[-1]] >= priority[c]:
+                        res.append(stack.pop())
+                    else:
+                        break
+                stack.append(c)
+        elif c=='(':
             stack.append(c)
         elif c==')':
-            t = stack.pop()
-            while t!='(':
-                res.append(stack.pop)
+            while stack:
+                t = stack.pop()
+                if(t=='('):
+                    break
+                else:
+                    res.append(t)
+
     while stack:
         res.append(stack.pop())
     return res
@@ -59,4 +69,4 @@ def myEval(expr):
 
 #以下为调试用代码
 if __name__=='__main__': 
-    print(getPostfixExp(' 1 + 2 - 3 * 4 '))
+    print(getPostfixExp('1+(2-3)*4+4/2')) 
