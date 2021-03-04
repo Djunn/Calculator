@@ -14,7 +14,8 @@
     * Djun
 
 ### 计算器程序v1.4 ###
-*更新内容
+更新内容
 
-    *自己手写了一个myEval函数来替代python自带的
-    *sqrt也是，不过三角函数属于math包
+    自己手写了一个myEval函数来替代python自带的
+    myEval替代了部分eval的功能
+    三角函数,对数函数,数学常数属于math包

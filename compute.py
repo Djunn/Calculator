@@ -1,11 +1,7 @@
 import math
 # from math import sin, cos, sqrt, log
-"""
-运算优先级(设定):
-
-"""
-PI = math.pi
-E = math.e
+PI = 3.141592653589793
+E = 2.718281828459045
 
 def myCos(n):
     return math.cos(n)
@@ -21,24 +17,19 @@ def mySqrt(n):
 def myLog(n):
     return math.log(n) 
 
-
 # 数学表达式运算函数 
-# 数字越大优先级越高
-priority = {'*':2,'/':2,'+':1,'-':1,'(':0}
-
 def getPostfixExp(inExp):
-    stack = []
-    res = []
-    temp = []
-    for c in inExp+' ': #不加空格有可能访问不了最后的字符
-        print('s'+str(stack))
-        print('res:'+str(res))
-        if temp: #处理连续的数字
-            res.append(''.join(temp))
-            temp.clear()
+    # 数字越大优先级越高
+    priority = {'*':2,'/':2,'+':1,'-':1,'(':0}
+    stack,res,temp=[],[],[]
+    for c in inExp+' ': # 不加空格有可能访问不了最后的字符
         if c.isdigit():
             temp.append(c)
-        elif c in priority.keys() and c!='(' and c!=')':
+            continue
+        if temp: # 处理连续的数字
+            res.append(''.join(temp))
+            temp.clear()
+        if c in priority.keys() and c!='(' and c!=')':
             if not stack:
                 stack.append(c)
             else:
@@ -62,10 +53,36 @@ def getPostfixExp(inExp):
         res.append(stack.pop())
     return res
 
-def myEval(expr):
-    pass
+# 计算后缀表达式
+def calculate(postExp):
+    opt = {
+        '-': lambda x,n: x.pop() - n,
+        '+': lambda x,n: x.pop() + n,
+        '*': lambda x,n: x.pop() * n,
+        '/': lambda x,n: x.pop() / n,
+    }
+    stack = []
+    for n in postExp:
+        print(stack)
+        if n.isdigit():
+            stack.append(int(n))
+        elif n in opt.keys():
+            num = stack.pop()
+            res = opt[n](stack,num)
+            stack.append(res)
     
+    return res
 
-#以下为调试用代码
+
+def myEval(expr):
+    if not expr:
+        raise ValueError('illegal expression')
+    res = calculate(getPostfixExp(expr))
+    return res
+    
+# 以下为测试用代码
 if __name__=='__main__': 
-    print(getPostfixExp('1+(2-3)*4+4/2')) 
+    pst=getPostfixExp('10+10*(3-2)+1*3+4')
+    print('pst'+str(pst))
+    res=calculate(pst)
+    print(res)
