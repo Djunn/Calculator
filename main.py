@@ -1,11 +1,10 @@
 #计算器
-import re
 import math
 from math import cos,sin,sqrt,log
 import tkinter as tk
 import tkinter.messagebox
 
-import compute
+from compute import myEvalTemp
 
 VERSION = 1.4
 BUTTONS = [['C', '/', '*', '<-'],
@@ -60,36 +59,19 @@ class Calculator(tk.Frame):
         self.var.set('')
 
     def equal(self):
-        def factorial(exp1,exp2=None): # 阶乘函数
-            if '.' in exp1 or '-' in exp1 or exp2:
-                raise ValueError
-            if exp1=='0' or exp1=='1':
-                return '1'
-            if int(exp1) > 101: #超过101!就会显示不完整
-                raise ValueError
-            res = 1
-            for i in range(1,int(exp1)+1):
-                res *= i
-            return ' '+str(res)+' '
-
-        def replace(exp): #将表达式替换为eval认识的
-            dic = {'ln':'log', 'E':str(math.e), 'Pi':str(math.pi),}
-            #print('gp0:',exp.group(0))
-            if exp.group(0) in dic.keys():
-                return dic[exp.group(0)]
-            elif '^' in exp.group(0):
-                return '**'
-            elif '!' in exp.group(0):
-                t = exp.group(0).split('!')
-                return factorial(*exp.group(0).split('!'))
-            
+        if self.var.get()=="Error":
+            self.var.set('')  
         try:
-            exp=re.sub(r'ln|E|Pi|\-?\d+(.\d+)?\!|\^',replace,self.var.get())
-            print('exp==',exp)
-            res = eval(exp)
+            #exp=re.sub(r'ln|E|Pi|\-?\d+(.\d+)?\!|\^',replace,self.var.get())
+            exp = self.var.get()
+            if not exp:
+                raise ValueError
+            res = myEvalTemp(exp)
             self.var.set(str(res))
-        except BaseException as e:
+        except SyntaxError:
             self.var.set("Error")
+        except BaseException:
+            pass
 
     def backspace(self):
         self.var.set(self.var.get()[:-1])
