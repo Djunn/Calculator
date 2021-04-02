@@ -55,6 +55,16 @@ def getPostfixExp(inExp):
     print(res)
     return res
 
+def getPostfixExp(inExp):
+    """处理中缀表达式来得到后缀表达式"""
+    priority = {'*':2,'/':2,'+':1,'-':1,'(':0}
+    stack, res, temp = [],[],[]
+    for c in inExp + ' ': # 为了访问到最后的字符,需要加上空格
+        if c.isdigit() or c=='.': # 处理
+            temp.append(c)
+            continue
+
+
 # 计算后缀表达式
 def calculate(postExp):
     opt = {
@@ -90,7 +100,7 @@ def factorial(exp1,exp2=None): # 阶乘函数
     return ' '+str(res)+' '
 
 def replace(exp): #将表达式替换为eval认识的
-    dic = {'ln':'log', 'E':str(math.e), 'Pi':str(math.pi),}
+    dic = {'ln':'log', 'E':E, 'Pi':PI,}
     #print('gp0:',exp.group(0))
     if exp.group(0) in dic.keys():
         return dic[exp.group(0)]
@@ -118,10 +128,11 @@ def myEvalTemp(expr):
     
 # 以下为测试用代码
 if __name__=='__main__': 
+    """test only"""
     # pst=getPostfixExp('10+10*(3-2)+1*3+4')
     # print('pst'+str(pst))
     # res=calculate(pst)
     # print(res)
     # print(myEvalTemp('1+2 * 3 / 4 +100'))
-    pstt = '1.1+1.2'
+    pstt = '1.1+1.2*3+(4-6)'
     print(myEvalTemp(pstt))
