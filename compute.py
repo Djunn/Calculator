@@ -18,51 +18,34 @@ def mySqrt(n):
 def myLog(n):
     return math.log(n) 
 
-# 数学表达式运算函数 
-def getPostfixExp(inExp):
-    # 数字越大优先级越高
-    priority = {'*':2,'/':2,'+':1,'-':1,'(':0}
-    stack,res,temp=[],[],[]
-    for c in inExp+' ': # 不加空格有可能访问不了最后的字符
-        if c.isdigit() or c=='.':
-            temp.append(c)
-            continue
-        if temp: # 处理连续的数字
-            res.append(''.join(temp))
-            temp.clear()
-        if c in priority.keys() and c!='(' and c!=')':
-            if not stack:
-                stack.append(c)
-            else:
-                while stack:
-                    if priority[stack[-1]] >= priority[c]:
-                        res.append(stack.pop())
-                    else:
-                        break
-                stack.append(c)
-        elif c=='(':
-            stack.append(c)
-        elif c==')':
-            while stack:
-                t = stack.pop()
-                if(t=='('):
-                    break
-                else:
-                    res.append(t)
-
-    while stack:
-        res.append(stack.pop())
-    print(res)
-    return res
-
-def getPostfixExp(inExp):
+def getPostfixExpT(inExp):
     """处理中缀表达式来得到后缀表达式"""
     priority = {'*':2,'/':2,'+':1,'-':1,'(':0}
     stack, res, temp = [],[],[]
     for c in inExp + ' ': # 为了访问到最后的字符,需要加上空格
-        if c.isdigit() or c=='.': # 处理
+        if c.isdigit() or c=='.': # 处理遇到数字的情况
             temp.append(c)
             continue
+        if temp:
+            res.append(''.join(temp))
+            temp.clear()
+        if c in priority.keys() and c!='(': # 处理遇到运算符号的情况
+            if not stack:
+                stack.append(c)
+            else:
+                while stack and priority[stack[-1]]>=priority[c]:
+                    res.append(stack.pop())
+                stack.append(c)
+        elif c=='(':
+            stack.append(c)
+        elif c==')':
+            t = stack.pop()
+            while stack and t!='(':
+                res.append(t)
+                t = stack.pop()
+    while stack:
+        res.append(stack.pop())
+    return res
 
 
 # 计算后缀表达式
@@ -134,5 +117,6 @@ if __name__=='__main__':
     # res=calculate(pst)
     # print(res)
     # print(myEvalTemp('1+2 * 3 / 4 +100'))
-    pstt = '1.1+1.2*3+(4-6)'
-    print(myEvalTemp(pstt))
+    # pstt = '1.1+1.2*3+(4-6)'
+    # print(myEvalTemp(pstt))
+    print(getPostfixExpT('1+3.4*(5-6)/8'))
